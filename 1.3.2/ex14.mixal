@@ -1,0 +1,102 @@
+* DATE OF EASTER
+* rX = Y
+				ORIG	2000		# Should support filling in missing future refs
+Y				NOP
+G				NOP
+C				NOP
+X				NOP
+Z				NOP
+D				NOP
+E				NOP
+N				NOP
+				ORIG	3000
+EASTER	STJ		1F
+				STX		Y
+				ENTA	0				# E1. G <- (Y mod 19) + 1
+				DIV		=19=
+				INCX	1
+				STX		G
+				LDX		Y				#	E2. C <- (Y / 100) + 1
+				ENTA	0
+				DIV		=100=
+				INCA	1
+				STA		C
+				MUL		=3=			# E3. X <- (3C/4) - 12
+				DIV		=4=
+				DECA	12
+				STA		X
+				LDA		C				# Z <- ((8C + 5) / 25) - 5
+				MUL		=8=
+				SLAX	5
+				INCA	5
+				SRAX	5
+				DIV		=25=
+				DECA	5
+				STA		Z
+				LDA		Y				#	E4. D <- (5Y / 4) - X - 10
+				MUL		=5=
+				DIV		=4=
+				SUB		X
+				DECA	10
+				STA		D
+				LDA		G				# E5. E <- (11G + 20 + Z - X) mod 30
+				MUL		=11=
+				SLAX	5
+				INCA	20
+				ADD		Z
+				SUB		X
+				SRAX	5
+				DIV		=30=
+				CMPX	=24=		#     If E = 24 or (E = 25 and G > 11)
+				JE		2F			#     Then E <- E + 1
+				CMPX	=25=
+				JNE		3F
+				ENTA	11
+				CMPA	G
+				JLE		3F
+2H			INCX	1
+3H			STX		E
+				ENTA	44			# E6. N <- 44 - E
+				SUB		E				#     If N < 21 Then N <- N + 30
+				CMPA	=21=
+				JGE		2F
+				INCA	30
+2H			STA		N
+				ADD		D				# E7. N <- N + 7 - ((D + N) mod 7)
+				SRAX	5
+				DIV		=7=
+				LDA		=-1=(0:0) # better way to set sign?
+				SLAX	5
+				ADD 	N
+				INCA	7
+				STA		N
+				JBUS	*(18)
+				ENT1	MONTH
+				CMPA	=31=
+				JG		2F
+				MOVE	MARCH(1)
+				JMP		PRINT
+2H			DECA	31
+				MOVE	APRIL(1)
+PRINT		CHAR
+				STX		DAY(1:2)
+				LDA		Y
+				CHAR
+				STX		YEAR
+				OUT		ANS(18)
+1H			JMP		*
+MARCH		ALF		"MARCH"
+APRIL		ALF		"APRIL"
+ANS			ALF		"     "
+DAY			ALF		"DD   "
+MONTH		ALF		"MMMMM"
+				ALF		";    "
+YEAR		ALF		"YYYYY"
+				ORIG	*+20
+START		ENT2	1950-2000
+3H			ENTX	2000,2
+				JMP		EASTER
+				INC2	1
+				J2NP	3B
+				HLT
+				END		START

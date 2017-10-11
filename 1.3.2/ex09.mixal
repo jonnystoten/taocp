@@ -1,0 +1,87 @@
+BYTESIZE	EQU			64 # not legit!!
+MAXIO			EQU			20
+TABLE			ORIG		2000
+					NOP			GOOD(BYTESIZE)
+					ADD			ADDRESS(5:5)
+					SUB			ADDRESS(5:5)
+					MUL			ADDRESS(5:5)
+					DIV			ADDRESS(5:5)
+					HLT			GOOD
+					SRC			GOOD
+					MOVE		0(BYTESIZE)
+					LDA			ADDRESS(5:5)
+					LD1			ADDRESS(5:5)
+					LD2			ADDRESS(5:5)
+					LD3			ADDRESS(5:5)
+					LD4			ADDRESS(5:5)
+					LD5			ADDRESS(5:5)
+					LD6			ADDRESS(5:5)
+					LDX			ADDRESS(5:5)
+					LDNA		ADDRESS(5:5)
+					LDN1		ADDRESS(5:5)
+					LDN2		ADDRESS(5:5)
+					LDN3		ADDRESS(5:5)
+					LDN4		ADDRESS(5:5)
+					LDN5		ADDRESS(5:5)
+					LDN6		ADDRESS(5:5)
+					LDNX		ADDRESS(5:5)
+					STA			ADDRESS(5:5)
+					ST1			ADDRESS(5:5)
+					ST2			ADDRESS(5:5)
+					ST3			ADDRESS(5:5)
+					ST4			ADDRESS(5:5)
+					ST5			ADDRESS(5:5)
+					ST6			ADDRESS(5:5)
+					STX			ADDRESS(5:5)
+					STJ			ADDRESS(2:2)
+					STZ			ADDRESS(5:5)
+					JBUS		0(MAXIO)
+					IOC			0(MAXIO)
+					IN			ADDRESS(MAXIO)
+					OUT			ADDRESS(MAXIO)
+					JRED		0(MAXIO)
+					JLE			ADDRESS
+					JANP		ADDRESS
+					J1NP		ADDRESS
+					J2NP		ADDRESS
+					J3NP		ADDRESS
+					J4NP		ADDRESS
+					J5NP		ADDRESS
+					J6NP		ADDRESS
+					JXNP		ADDRESS
+					ENNA		GOOD
+					ENN1		GOOD
+					ENN2		GOOD
+					ENN3		GOOD
+					ENN4		GOOD
+					ENN5		GOOD
+					ENN6		GOOD
+					ENNX		GOOD
+					CMPA		ADDRESS(5:5)
+					CMP1		ADDRESS(5:5)
+					CMP2		ADDRESS(5:5)
+					CMP3		ADDRESS(5:5)
+					CMP4		ADDRESS(5:5)
+					CMP5		ADDRESS(5:5)
+					CMP6		ADDRESS(5:5)
+					CMPX		ADDRESS(5:5)
+					ORIG		3000
+START			LDA			INST
+					LD1			INST(5:5)
+					CMP1		=64=
+					JGE			BAD						# OP >= 64
+					LD2			INST(3:3)
+					CMP2		=6=
+					JG			BAD						# I > 6
+					CMPA		TABLE,1(4:4)
+					JG			BAD						# F > max
+					LD3			TABLE,1(0:2)
+					JMP			0,3
+GOOD			HLT
+BAD				HLT
+ADDRESS		J2NZ		GOOD					# assume good if there's an index
+					LD4			INST(0:2)
+					CMP4		=3999=
+					JG			BAD
+					JMP			GOOD
+					END			START

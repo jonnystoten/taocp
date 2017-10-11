@@ -1,0 +1,37 @@
+				ORIG	0
+READER	EQU		16
+SIZE		EQU		16
+CARD2		EQU		*+SIZE
+BUFF		EQU		CARD2+SIZE		# Buffer area is 0032-0047
+
+* FIRST CARD
+LOC			IN		CARD2(READER)	# Read in second card.
+READ		IN		BUFF(READER)	# Read next card
+				LD1		0(0:0)				# rI1 <- 0
+				JBUS	*(READER)			# Wait for read to finish.
+				LDA		BUFF+1				# rA <- columns 6-10
+				SLA		1
+				SRAX	6							# rAX <- columns 7-10
+				NUM
+				STA		LOC						# LOC <- starting location
+				LDA		BUFF+1(1:1)
+				SUB		=30=
+LOOP		LD3		LOC						# rI3 <- LOC
+				JAZ		0,3						# Jump if transfer card (zero in col 6)
+				STA		BUFF					# BUFF <- count
+				LDA		LOC
+				ADD		=1=
+* SECOND CARD
+				STA		LOC						# LOC <- LOC + 1
+				LDA		BUFF+3,1(5:5)	# LSB of word
+				SUB		=30=					# 25 in the book?
+				STA		0,3(0:0)			# Store the sign
+				LDA		BUFF+2,1
+				LDX		BUFF+3,1
+				NUM
+				STA		0,3(1:5)			# Store the magnitude
+				MOVE	0,1(2)				# rI1 <- rI1 + 2 (!)
+				LDA		BUFF
+				SUB		=1=						# Decrease the count
+				JAP		LOOP					# Repeat until the count is zero
+				JMP		READ					# Now read a new card

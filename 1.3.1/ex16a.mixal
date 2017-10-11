@@ -1,0 +1,5 @@
+	ORIG	3000
+	STZ		0
+	ENT1	1
+	MOVE	0(50)
+	MOVE	0(49)
