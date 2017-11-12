@@ -2,7 +2,7 @@
 *
 L				EQU		500							# The number of primes to find
 PRINTER	EQU		18							# Unit number of the line printer
-PRIME		EQU		-1							# Memory area for table of primes
+PRIME		EQU		99							# Memory area for table of primes (-1 in the book, but that overwrites the loader when writing CON 2 below)
 BUF0		EQU		2000						# Memory area for BUFFER[0]
 BUF1		EQU		BUF0+25					# Memory area for BUFFER[1]
 				ORIG	3000
