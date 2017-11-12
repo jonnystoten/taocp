@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-shake "$@" > ~/.stir/cardreader.dat
+shake -input "$@" > ~/.stir/cardreader.dat
 stir
