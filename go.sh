@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-shake -input "$@" > ~/.stir/cardreader.dat
-stir
+shake "$@" --format=deck > ~/.negroni/io/card_reader.dat
+stir --format=deck
