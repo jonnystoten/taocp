@@ -68,20 +68,20 @@ TABLE			ORIG		2000
 					ORIG		3000
 START			LDA			INST
 					LD1			INST(5:5)
-					CMP1		=64=
-					JGE			BAD						# OP >= 64
-					LD2			INST(3:3)
-					CMP2		=6=
-					JG			BAD						# I > 6
-					CMPA		TABLE,1(4:4)
-					JG			BAD						# F > max
-					LD3			TABLE,1(0:2)
-					JMP			0,3
-GOOD			HLT
-BAD				HLT
-ADDRESS		J2NZ		GOOD					# assume good if there's an index
-					LD4			INST(0:2)
-					CMP4		=3999=
-					JG			BAD
-					JMP			GOOD
-					END			START
+				CMP1		=64=
+				JGE			BAD						# OP >= 64
+				LD2			INST(3:3)
+				CMP2		=6=
+				JG			BAD						# I > 6
+				CMPA		TABLE,1(4:4)
+				JG			BAD						# F > max
+				LD3			TABLE,1(0:2)
+				JMP			0,3
+GOOD		HLT
+BAD			HLT
+ADDRESS	J2NZ		GOOD					# assume good if there's an index
+				LD4			INST(0:2)
+				CMP4		=3999=
+				JG			BAD
+				JMP			GOOD
+				END			START

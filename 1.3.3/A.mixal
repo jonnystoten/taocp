@@ -1,30 +1,30 @@
-CARDSIZE	EQU		16											# Words on each card
-MAXWDS		EQU		75*CARDSIZE							# Maximum length of input
-PERM			ORIG	*+MAXWDS								# The input permutation
-ANS				ORIG	*+MAXWDS								# Place for answer
-OUTBUF		ORIG	*+24										# Place for printing
-CARDS			EQU		16											# Unit number for card reader
-PRINTER		EQU		18											# Unit number for printer
-BEGIN			IN		PERM(CARDS)							# Read first card
-					ENT2	0
-					LDA		EQUALS
-1H				JBUS	*(CARDS)								# Wait for cycle to complete
-					CMPA	PERM+CARDSIZE-1,2
-					JE		*+2											# Is it the last card?
-					IN		PERM+CARDSIZE,2(CARDS)	# No, read another
-					ENT1	OUTPUT
-					JBUS	*(PRINTER)							# Print a copy of
-					MOVE	PERM,2(CARDSIZE)				#   the input card
-					OUT		OUTBUF(PRINTER)
-					JE		1F
-					INC2	CARDSIZE
-					CMP2	=MAXWDS-CARDSIZE=
-					JLE		1B											# Repeat until input is complete
-					HLT														# Too much input!
-1H				INC2	15											# At this point, rI2 words of
-					ST2		SIZE										#   input are in PERM, PERM+1, ...
-					ENT3	0												# A1. First pass
-2H				LDAN	PERM,3									# Get next element of input
-					CMPA	LPAREN(1:5)							# Is is "("?
-					JNE		1F
-					STA		PERM,3									# If so, tag it
+CARDSIZE	EQU	16			# Words on each card
+MAXWDS		EQU	75*CARDSIZE		# Maximum length of input
+PERM		ORIG	*+MAXWDS		# The input permutation
+ANS		ORIG	*+MAXWDS		# Place for answer
+OUTBUF		ORIG	*+24			# Place for printing
+CARDS		EQU	16			# Unit number for card reader
+PRINTER		EQU	18			# Unit number for printer
+BEGIN		IN	PERM(CARDS)		# Read first card
+		ENT2	0
+		LDA	EQUALS
+1H		JBUS	*(CARDS)		# Wait for cycle to complete
+		CMPA	PERM+CARDSIZE-1,2
+		JE	*+2			# Is it the last card?
+		IN	PERM+CARDSIZE,2(CARDS)	# No, read another
+		ENT1	OUTPUT
+		JBUS	*(PRINTER)		# Print a copy of
+		MOVE	PERM,2(CARDSIZE)	#   the input card
+		OUT	OUTBUF(PRINTER)
+		JE	1F
+		INC2	CARDSIZE
+		CMP2	=MAXWDS-CARDSIZE=
+		JLE	1B			# Repeat until input is complete
+		HLT				# Too much input!
+1H		INC2	15			# At this point, rI2 words of
+		ST2	SIZE			#   input are in PERM, PERM+1, ...
+		ENT3	0			# A1. First pass
+2H		LDAN	PERM,3			# Get next element of input
+		CMPA	LPAREN(1:5)		# Is is "("?
+		JNE	1F
+		STA	PERM,3			# If so, tag it

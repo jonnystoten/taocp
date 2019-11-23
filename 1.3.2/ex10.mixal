@@ -1,28 +1,28 @@
-MATRIX		EQU		1000
-RMIN			EQU		2000
-MINS			EQU		2001
-					ORIG	3000
-START			ENT1	8*9+8		# rI1 = matrix index
-ROW				ENT2	8				# column index
-					LDA		MATRIX,1
-NEWMIN		STA		RMIN
-					ENT5	0				# rI5 = row min count
-SAME			ST1		MINS,5
-					INC5	1
-1H				DEC1	1
-					DEC2	1
-					LDA		MATRIX,1
-					CMPA	RMIN
-					JE		SAME
-					JL		NEWMIN
-					J2P		1B			# if done with row, find max in each col
-COL				LD2		MINS,5
-					INC2	8*9
-					CMPA	MATRIX,2
-					JG		NOPE
-YEP				LD1		MINS,5
-					HLT
-NOPE			DEC5	1
-					J5P		COL
-					JMP		ROW
-					END		START
+MATRIX	EQU	1000
+RMIN	EQU	2000
+MINS	EQU	2001
+	ORIG	3000
+START	ENT1	8*9+8		# rI1 = matrix index
+ROW	ENT2	8		# column index
+	LDA	MATRIX,1
+NEWMIN	STA	RMIN
+	ENT5	0		# rI5 = row min count
+SAME	ST1	MINS,5
+	INC5	1
+1H	DEC1	1
+	DEC2	1
+	LDA	MATRIX,1
+	CMPA	RMIN
+	JE	SAME
+	JL	NEWMIN
+	J2P	1B		# if done with row, find max in each col
+COL	LD2	MINS,5
+	INC2	8*9
+	CMPA	MATRIX,2
+	JG	NOPE
+YEP	LD1	MINS,5
+	HLT
+NOPE	DEC5	1
+	J5P	COL
+	JMP	ROW
+	END	START
